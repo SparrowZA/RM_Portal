@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<div id="form">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="/{{ console_url }}" class="btn btn-create">Back to Console</a>
+        <input id="btn_submit" type="submit" value="Submit"> 
+    </form>
+</div>
+{% endblock content %}

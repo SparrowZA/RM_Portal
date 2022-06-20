@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<h1>
+    Relationship Manager Console
+</h1>
+<a href={{ request_url }} class="btn btn-create">Create New Request</a>
+<a href={{ create_client_url }} class="btn btn-create">Create New Client</a>
+<div id="table_div">
+    <table id="table_list">
+        <tr>
+            <th>Client</th>
+            <th>Client Email</th>
+            <th>Doc Name</th>
+            <th>Request Date</th>
+            <th>Doc Submitted</th>
+            <th>Submit Date</th>
+            <th>Client URL</th>
+        </tr>
+        
+        {% for request in req_list %}
+        <tr>
+        <td>{{ request.client_name }}</td>
+        <td>{{ request.client_email }}</td>
+        <td>{{ request.doc_name }}</td>
+        <td>{{ request.request_date }}</td>
+        <td>{{ request.submitted }}</td>
+        <td>{{ request.upload_date }}</td>
+        <td>{{ request.client_url }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+    <a href={{ client_list_url }} class="btn btn-create">Client List</a>
+
+{% endblock content %}

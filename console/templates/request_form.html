@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<div id="form">
+    <h1>
+        Document Request Form
+    </h1>
+    <p>Relationship Manager: {{ rm.name }}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ request.as_p }}
+        <label for="client">Client Name</label>
+        <select name="client" id="client">
+        {% for client in client_list %}
+            <option value="{{ client.id }}">{{ client.name }}</option>
+        {% endfor %}
+        </select>
+        <br><br>
+        <a href="/{{ console_url }}" class="btn btn-create">Back to Console</a>
+        <input id="btn_submit" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}

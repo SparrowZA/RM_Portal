@@ -1,0 +1,7 @@
+/.venv
+/.vscode
+__pycache__
+/documents
+/migrations
+*.sqlite3
+*.env

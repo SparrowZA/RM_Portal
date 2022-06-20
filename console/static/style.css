@@ -1,0 +1,83 @@
+html,body{
+    background-color: #EEE;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+td, th{
+    border: 1px solid #888;
+    padding: 5px;
+    text-align: center;
+}
+
+#main{
+    width: 80%;
+    min-width: 30em;
+    margin: 0 auto
+}
+
+#login{
+    display: flex;
+    flex-direction: column;
+    margin: 100px auto;
+    border-radius: 5px;
+    border: 1px solid #333;
+    width: fit-content;
+    padding: 20px;
+    text-align: center;
+    background-color: #F3F3F3;
+}
+
+#form{
+    display: flex;
+    flex-direction: column;
+    margin: 100px auto;
+    border-radius: 5px;
+    border: 1px solid #333;
+    width: fit-content;
+    padding: 20px;
+    text-align: center;
+    background-color: #F3F3F3;
+}
+
+#table_div{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0px auto;
+}
+
+.btn:link,
+.btn:visited{
+    border-radius: 5px;
+    background-color: rgb(44, 100, 173);
+    padding: 10px;
+    margin: 10px 0px;
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration: None;
+    display: inline-flex;
+    color: #EEE;
+    transition: background-color 0.2s, border 0.2s, color 0.2s;
+}
+
+.btn:hover,
+.btn:active{
+    background-color: rgb(110, 161, 228);
+}
+
+#btn_submit{
+    border-radius: 5px;
+    background-color: rgb(44, 100, 173);
+    padding: 10px;
+    margin: 10px 0px;
+    font-weight: 300;
+    font-size: 14px;
+    color: #EEE;
+    text-decoration: None;
+    display: inline-flex;
+    border: None;
+}

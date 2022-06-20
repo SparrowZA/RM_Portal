@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<h1>
+    Relationship Manager Client List
+</h1>
+<a href="/{{ console_url }}" class="btn btn-create">Back to Console</a>
+<table>
+    <tr>
+        <th>Client Name</th>
+        <th>Client Email</th>
+        <th>Client Company</th>
+    </tr>
+    
+    {% for client in client_list %}
+    <tr>
+    <td>{{ client.name }}</td>
+    <td>{{ client.email }}</td>
+    <td>{{ client.company }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

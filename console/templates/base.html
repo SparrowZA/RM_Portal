@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rm Portal</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    </head>
+    <body>
+        <div id="main">
+            {% block content %}{% endblock content %}
+        </div>
+    </body>
+</html>

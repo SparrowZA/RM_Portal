@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<div id="form">
+    <h1>
+        Client Upload Portal
+    </h1>
+    <p>Client: {{ client.name }}</p>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ client_upload.as_p }}
+        <br>
+        <input id="btn_submit" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}
