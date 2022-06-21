@@ -2,7 +2,7 @@ from django.db import models
 
 from console.entities.client import Client
 from console.entities.relationship_manager import RelationshipManager
-from console.entities.request import Request
+from console.entities.document_request import DocumentRequest
 from console.entities.document import Document
 
 class RelationshipManagerModel(models.Model):
@@ -39,7 +39,7 @@ class RequestModel(models.Model):
     
     def to_entity(self):
         if hasattr(self, 'documentmodel'):
-            return Request(
+            return DocumentRequest(
                 id=self.id,
                 request_date=self.request_date,
                 submitted=self.submitted,
@@ -50,7 +50,7 @@ class RequestModel(models.Model):
                 document=self.documentmodel.to_entity()
             )
         else:
-            return Request(
+            return DocumentRequest(
                 id=self.id,
                 request_date=self.request_date,
                 submitted=self.submitted,
