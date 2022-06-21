@@ -5,7 +5,7 @@ from datetime import datetime
 from django.conf import PASSWORD_RESET_TIMEOUT_DAYS_DEPRECATED_MSG
 from console.adapters.storage_interface import IStorage
 from console.entities.document import Document
-from console.entities.request import Request
+from console.entities.document_request import DocumentRequest
 from console.models import ClientModel, DocumentModel, RelationshipManagerModel, RequestModel
 from console.utils.url_creator import create_unique_url
 
@@ -38,6 +38,8 @@ class DjangoStorage(IStorage):
         return request_model.to_entity()
 
     def create_client(self, name, company, email):
+        ''' Creates client and saves it to storage.
+            Returns a client entity. '''
         client = ClientModel(name=name, company=company, email=email)
         client.save()
         return client.to_entity()
@@ -84,7 +86,7 @@ class DjangoStorage(IStorage):
         try:
             rm_id = RelationshipManagerModel.objects.get(email=rm_email)
         except RelationshipManagerModel.DoesNotExist:
-            rm_id = None
+            return None
         return rm_id.to_entity()
     
     def update_request_submit(self, request_id, new_value):

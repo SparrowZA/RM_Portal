@@ -4,7 +4,11 @@ storage = DjangoStorage()
 
 # class RmAuth():
 def get_user_Id(rm_email):
-    return storage.get_rm_id(rm_email=rm_email).id
+    user = storage.get_rm_id(rm_email=rm_email)
+    if user is None:
+        return None
+    else:
+        return user.id
 
 def is_authenticated(rm_id) -> bool:
     '''

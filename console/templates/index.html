@@ -4,9 +4,13 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 <div id="login">
-    <form action="login/" method="post">
+    <form action="/login/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        {% if response.error_message == None %}
+        {% else %}
+        <p>{{ response.error_message }}</p>
+        {% endif %}
         <input id="btn_submit" type="submit" value="Log in"> 
     </form>
 </div>

@@ -7,7 +7,7 @@ from console.entities.document import Document
 # from console.models import ClientModel, RelationshipManagerModel
 
 @dataclass
-class Request():
+class DocumentRequest():
     id: int
     request_date: str
     submitted: bool

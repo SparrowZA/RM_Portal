@@ -1,4 +1,4 @@
-from console.entities.request import Request
+from console.entities.document_request import DocumentRequest
 from console.entities.document import Document
 
 
@@ -12,7 +12,7 @@ def build_console_table_list(request_list):
         if entity.submitted is True:
             submitted = 'Yes'
         else:
-            submitted = 'No'\
+            submitted = 'No'
         
         if entity.document is None:
             upload_date = None
