@@ -22,13 +22,14 @@ from console.views import (
     client_list, 
     create_request, 
     client_upload,
-    server_error
+    server_error,
+    client_post_upload
     )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', index, name='index'),
-    path('index/login/', index, name='login'),
+    path('login/', index, name='login'),
     path('manager/<int:rm_id>/console', console, name='console'),
 
     path('manager/<int:rm_id>/create_request/', create_request, name='create_request'),
@@ -37,5 +38,6 @@ urlpatterns = [
     path('manager/<int:rm_id>/client_list/', client_list, name='client_list'),
 
     path('<str:client_url>', client_upload, name='client_upload'),
+    path('client_post_upload/', client_post_upload, name='client_post_upload'),
     path('error/', server_error, name='error')
 ]
