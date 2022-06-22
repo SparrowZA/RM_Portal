@@ -14,7 +14,7 @@
         <th>Client Company</th>
     </tr>
     
-    {% for client in client_list %}
+    {% for client in response.data.client_list %}
     <tr>
     <td>{{ client.name }}</td>
     <td>{{ client.email }}</td>
