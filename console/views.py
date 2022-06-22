@@ -1,6 +1,7 @@
-from urllib.request import HTTPRedirectHandler
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from cmath import e
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.core.mail import send_mail
 
 # Forms
 from console.forms.request_form import RequestForm
@@ -33,7 +34,7 @@ def index(request):
                 return render(request, 'index.html', data)
         else:
             data = {
-                'response': {'error_message': 'Incorrect credentials.'},
+                'response': {'result': 'error', 'error_message': 'Incorrect credentials.'},
                 'form': LoginForm()
             }
             return render(request, 'index.html', data)
@@ -70,6 +71,15 @@ def create_client(request, rm_id):
             }
             
             return render(request, 'create_client.html', data)
+        else:
+            response = {'result': 'error', 'error_message': 'Invalid form data.'}
+            data = {
+                'console_url': f'manager/{rm_id}/console',
+                'response': response,
+                'form': CreateClientForm()
+            }
+            
+            return render(request, 'create_client.html', data)
     else:
         client_form = CreateClientForm()
         form = {
@@ -81,9 +91,13 @@ def create_client(request, rm_id):
 @login_required
 def client_list(request, rm_id):
     '''Creates a client list and passes it to a html form.'''
-    form = usecases.get_client_list()
-    form['console_url'] = f'manager/{rm_id}/console'
-    return render(request, 'client_list.html', form)
+    response = usecases.get_client_list()
+    data = {
+                'console_url': f'manager/{rm_id}/console',
+                'response': response.to_dict()
+            }
+
+    return render(request, 'client_list.html', data)
 
 @login_required
 def create_request(request, rm_id):
@@ -91,6 +105,19 @@ def create_request(request, rm_id):
         form = RequestForm(request.POST)
         if form.is_valid():
             response = usecases.create_request_usecase(form.clean(), rm_id)
+
+            if response.is_success():
+                try:
+                    send_mail(
+                        response.data['email'].subject,
+                        response.data['email'].message,
+                        response.data['email'].sender,
+                        response.data['email'].recipient, 
+                        fail_silently=False
+                    )
+                except Exception as e:
+                    response.result = 'error'
+                    response.error_message = e
 
             data = {
                 'console_url': f'manager/{rm_id}/console',
@@ -102,7 +129,15 @@ def create_request(request, rm_id):
             
             return render(request, 'request_form.html', data)
         else:
-            return HttpResponse(request, {'message': 'The form is not valid'})
+            response = {'result': 'error', 'error_message': 'Invalid form data.'}
+            data = {
+                'console_url': f'manager/{rm_id}/console',
+                'rm': usecases.storage.get_rm(rm_id).to_dict(),
+                'client_list': usecases.storage.get_clients(),
+                'response': response,
+                'form': RequestForm()
+            }
+            return render(request, 'request_form.html', data)
     else:
         request_form = RequestForm()
         drop_down = usecases.storage.get_clients()

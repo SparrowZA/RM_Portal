@@ -47,7 +47,7 @@ class Usecases:
         form = {
             'client_list': client_list
         }
-        return form
+        return self.response_builder.build_response_success(form)
     
     def create_request_usecase(self, form_data, rm_id):
         '''
@@ -77,17 +77,16 @@ class Usecases:
         try:
             email_builder = EmailBuilder(request)
             email = email_builder.build_rm_request_email()
-            send_mail(
-                email.subject,
-                email.message,
-                email.sender,
-                email.recipient, 
-                fail_silently=False
-            )
         except Exception as e:
             return self.response_builder.build_response_error(e)
 
-        return self.response_builder.build_response_success(request)
+        # Build the return object
+        return self.response_builder.build_response_success(
+            {
+                'request': request,
+                'email': email
+            }
+        )
     
     def get_request_list(self):
         '''
