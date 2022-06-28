@@ -7,8 +7,12 @@ NOTIFICATION_SUBJECT = 'Document Upload Notification'
 class EmailBuilder:
     def __init__(self, request: DocumentRequest):
         self.request = request
+        if request.client is None or request.relationship_manager is None:
+            raise AttributeError('The request is missing a Client or Relationship manager.')
 
     def build_rm_notification_email(self):
+        if self.request.document is None:
+            raise AttributeError('Missing document value from entity.')
         subject = NOTIFICATION_SUBJECT
         message = self._create_notification_message()
         sender = self.request.relationship_manager.email
@@ -21,7 +25,7 @@ class EmailBuilder:
             recipient=recipient
         )
 
-    def build_rm_request_email(self):
+    def build_client_request_email6(self):
         subject = REQUEST_SUBJECT
         message = self._create_request_message()
         sender = self.request.relationship_manager.email
