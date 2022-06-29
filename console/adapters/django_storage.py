@@ -82,7 +82,7 @@ class DjangoStorage(IStorage):
             rm = None
         return rm.to_entity()
     
-    def get_rm_id(self, rm_email):
+    def authenticate_email(self, rm_email):
         try:
             rm_id = RelationshipManagerModel.objects.get(email=rm_email)
         except RelationshipManagerModel.DoesNotExist:
