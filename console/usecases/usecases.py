@@ -1,31 +1,29 @@
 from datetime import datetime
-from django.core.mail import send_mail
-
-# Models
-from console.adapters.django_storage import DjangoStorage
+# from django.core.mail import send_mail
 
 # Helper functions
 from console.utils.authentication_utils import get_user_Id
 from console.utils.serializer import build_console_table_list
 from console.utils.email_utils import EmailBuilder
 
-# Response util
-from console.utils.response_builder import ResponseBuilder
 
-class Usecases:
-    def __init__(self):
-        self.storage = DjangoStorage()
-        self.response_builder = ResponseBuilder()
+class Usecases():
+    def __init__(self, storage, response):
+        self.storage = storage
+        self.response_builder = response
 
-    def login(self, form):
-        rm_email = form['email']
-        rm_id = get_user_Id(rm_email)
+    def login(self, request):
+        if bool(request) is False:
+            return self.response_builder.build_response_from_invalid_request(request)
+
+        rm_email = request.email
+        rm_id = get_user_Id(self.storage, rm_email)
         if rm_id is None:
             return self.response_builder.build_response_error(error_message='Login details are incorrect!')
         else:
             return self.response_builder.build_response_success(data={'rm_id': rm_id})
 
-    def create_client_usecase(self, form_data):
+    def create_client(self, form_data):
         '''
             Takes the form data creates a client entity and saves the data via 
             the storage interface -> Currently using the Django ORM.
@@ -49,7 +47,7 @@ class Usecases:
         }
         return self.response_builder.build_response_success(form)
     
-    def create_request_usecase(self, form_data, rm_id):
+    def create_request(self, form_data, rm_id):
         '''
             Function takes form data and creates a document request.
             It sends a notification to the client and save the request
@@ -76,7 +74,7 @@ class Usecases:
         
         try:
             email_builder = EmailBuilder(request)
-            email = email_builder.build_rm_request_email()
+            email = email_builder.build_client_request_email()
         except Exception as e:
             return self.response_builder.build_response_error(e)
 
@@ -126,13 +124,13 @@ class Usecases:
         try:
             email_builder = EmailBuilder(request)
             email = email_builder.build_rm_notification_email()
-            send_mail(
-                email.subject,
-                email.message,
-                email.sender,
-                email.recipient, 
-                fail_silently=False
-            )
+            # send_mail(
+            #     email.subject,
+            #     email.message,
+            #     email.sender,
+            #     email.recipient, 
+            #     fail_silently=False
+            # )
         except Exception as e:
             return self.response_builder.build_response_error(e)
         return request
