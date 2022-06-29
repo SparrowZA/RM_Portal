@@ -1,4 +1,3 @@
-from cmath import e
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.mail import send_mail
@@ -12,17 +11,27 @@ from console.forms.client_upload_form import ClientUploadForm
 # Usecases
 from console.usecases.usecases import Usecases
 
+# Response util
+from console.utils.response_builder import ResponseBuilder
+
+# Request builder
+from console.requests.login_request import (build_login_request, LoginInvalidRequest, LoginValidRequest)
+
+# Storage adapter
+from console.adapters.django_storage import DjangoStorage
+
 # Custom wrapper for authenticating id
 from console.wrappers import login_required
 
 # Global usecase object.
-usecases = Usecases()
+usecases = Usecases(DjangoStorage(), ResponseBuilder())
 
 def index(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            response = usecases.login(form.clean())   
+            login_request = build_login_request(form.clean())
+            response = usecases.login(login_request)   
             if response.is_success():
                 rm_id = response.data['rm_id']
                 return HttpResponseRedirect(f'/manager/{rm_id}/console')
@@ -42,7 +51,7 @@ def index(request):
         form = LoginForm()
         return render(request, 'index.html', {'form': form})        
 
-@login_required
+@login_required(usecases.storage)
 def console(request, rm_id):
     requests = usecases.get_request_list()
     form_data = {
@@ -54,16 +63,16 @@ def console(request, rm_id):
     
     return render(request, 'console.html', form_data)
 
-@login_required
+@login_required(usecases.storage)
 def create_client(request, rm_id):
     '''
-    Create new client usingthe form data.
+    Create new client using the form data.
     '''
     if request.method == 'POST':
         form = CreateClientForm(request.POST)
         if form.is_valid():
             # Input values into form data
-            response = usecases.create_client_usecase(form.clean())
+            response = usecases.create_client(form.clean())
             data = {
                 'console_url': f'manager/{rm_id}/console',
                 'response': response.to_dict(),
@@ -88,7 +97,7 @@ def create_client(request, rm_id):
         }
         return render(request, 'create_client.html', form)
 
-@login_required
+@login_required(usecases.storage)
 def client_list(request, rm_id):
     '''Creates a client list and passes it to a html form.'''
     response = usecases.get_client_list()
@@ -99,12 +108,12 @@ def client_list(request, rm_id):
 
     return render(request, 'client_list.html', data)
 
-@login_required
+@login_required(usecases.storage)
 def create_request(request, rm_id):
     if request.method == 'POST':
         form = RequestForm(request.POST)
         if form.is_valid():
-            response = usecases.create_request_usecase(form.clean(), rm_id)
+            response = usecases.create_request(form.clean(), rm_id)
 
             if response.is_success():
                 try:
