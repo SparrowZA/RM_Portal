@@ -8,6 +8,7 @@
 </h1>
 <a href={{ request_url }} class="btn btn-create">Create New Request</a>
 <a href={{ create_client_url }} class="btn btn-create">Create New Client</a>
+<a href={{ client_list_url }} class="btn btn-create">Client List</a>
 <div id="table_div">
     <table id="table_list">
         <tr>
@@ -33,6 +34,5 @@
         {% endfor %}
     </table>
 </div>
-    <a href={{ client_list_url }} class="btn btn-create">Client List</a>
 
 {% endblock content %}
