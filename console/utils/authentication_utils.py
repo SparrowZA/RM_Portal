@@ -1,16 +1,11 @@
-from console.adapters.django_storage import DjangoStorage
-
-storage = DjangoStorage()
-
-# class RmAuth():
-def get_user_Id(rm_email):
-    user = storage.get_rm_id(rm_email=rm_email)
+def get_user_Id(storage, rm_email):
+    user = storage.authenticate_email(rm_email=rm_email)
     if user is None:
         return None
     else:
         return user.id
 
-def is_authenticated(rm_id) -> bool:
+def is_authenticated(storage, rm_id) -> bool:
     '''
     This is a wrapper for authenticating the rm manager.
 
